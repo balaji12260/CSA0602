@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <math.h>
+#include <limits.h>
+
+#define MAX 10
+
+// Structure to represent a city (x, y coordinates)
+typedef struct {
+    double x, y;
+} City;
+
+// Function to calculate Euclidean distance between two cities
+double distance(City c1, City c2) {
+    return sqrt((c1.x - c2.x) * (c1.x - c2.x) + (c1.y - c2.y) * (c1.y - c2.y));
+}
+
+// Swap function for generating permutations
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Function to calculate total distance for a given route
+double calcRouteDistance(City cities[], int path[], int n) {
+    double total = 0;
+    for (int i = 0; i < n - 1; i++)
+        total += distance(cities[path[i]], cities[path[i + 1]]);
+    // Add distance back to start city
+    total += distance(cities[path[n - 1]], cities[path[0]]);
+    return total;
+}
+
+// Recursive function to generate all permutations and find shortest route
+void tsp(City cities[], int path[], int start, int n, double *minDist, int bestPath[]) {
+    if (start == n - 1) {
+        double total = calcRouteDistance(cities, path, n);
+        if (total < *minDist) {
+            *minDist = total;
+            for (int i = 0; i < n; i++)
+                bestPath[i] = path[i];
+        }
+        return;
+    }
+
+    for (int i = start; i < n; i++) {
+        swap(&path[start], &path[i]);
+        tsp(cities, path, start + 1, n, minDist, bestPath);
+        swap(&path[start], &path[i]); // backtrack
+    }
+}
+
+// Main function
+int main() {
+    int n = 4;
+    City cities[] = {
+        {0, 0},   // City A
+        {1, 5},   // City B
+        {5, 2},   // City C
+        {6, 6}    // City D
+    };
+
+    int path[MAX], bestPath[MAX];
+    for (int i = 0; i < n; i++)
+        path[i] = i;
+
+    double minDist = INFINITY;
+
+    tsp(cities, path, 1, n, &minDist, bestPath);
+
+    printf("Shortest path: ");
+    printf("City%d -> ", bestPath[0]);
+    for (int i = 1; i < n; i++)
+        printf("City%d -> ", bestPath[i]);
+    printf("City%d\n", bestPath[0]);
+
+    printf("Minimum distance: %.3f\n", minDist);
+
+    return 0;
+}
