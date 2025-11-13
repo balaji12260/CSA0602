@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <math.h>
+#include <float.h>
+
+typedef struct {
+    double x, y;
+} Point;
+
+double distance(Point a, Point b) {
+    return sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
+}
+
+void findClosestPair(Point points[], int n) {
+    double minDist = DBL_MAX;
+    Point p1, p2;
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            double dist = distance(points[i], points[j]);
+            if (dist < minDist) {
+                minDist = dist;
+                p1 = points[i];
+                p2 = points[j];
+            }
+        }
+    }
+    printf("Closest Pair: (%.2f, %.2f) - (%.2f, %.2f)\n", p1.x, p1.y, p2.x, p2.y);
+    printf("Minimum Distance: %.6f\n\n", minDist);
+}
+
+int orientation(Point p, Point q, Point r) {
+    double val = (q.y - p.y) * (r.x - q.x) -
+                 (q.x - p.x) * (r.y - q.y);
+    if (val == 0) return 0;
+    return (val > 0) ? 1 : 2;
+}
+
+void convexHull(Point points[], int n) {
+    printf("Convex Hull Edges:\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            int left = 0, right = 0;
+            for (int k = 0; k < n; k++) {
+                if (k == i || k == j) continue;
+                int orient = orientation(points[i], points[j], points[k]);
+                if (orient == 1) right++;
+                else if (orient == 2) left++;
+            }
+            if (left == 0 || right == 0)
+                printf("(%.1f, %.1f) -- (%.1f, %.1f)\n",
+                       points[i].x, points[i].y, points[j].x, points[j].y);
+        }
+    }
+}
+
+int main() {
+    Point points[] = {
+        {10,0}, {11,5}, {5,3}, {9,3.5},
+        {15,3}, {12.5,7}, {6,6.5}, {7.5,4.5}
+    };
+    int n = sizeof(points)/sizeof(points[0]);
+
+    findClosestPair(points, n);
+    convexHull(points, n);
+    return 0;
+}
