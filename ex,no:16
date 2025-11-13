@@ -1,0 +1,81 @@
+#include <stdio.h>
+
+#define M 4   // number of rows
+#define N 3   // number of columns
+
+// Function to print the board
+void printBoard(int board[M][N]) {
+    for (int i = 0; i < M; i++) {
+        for (int j = 0; j < N; j++) {
+            printf("%d ", board[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+// Function to count live neighbors of a cell
+int countLiveNeighbors(int board[M][N], int row, int col) {
+    int count = 0;
+    int directions[8][2] = {
+        {-1, -1}, {-1, 0}, {-1, 1},
+        {0, -1},           {0, 1},
+        {1, -1},  {1, 0},  {1, 1}
+    };
+
+    for (int k = 0; k < 8; k++) {
+        int r = row + directions[k][0];
+        int c = col + directions[k][1];
+        if (r >= 0 && r < M && c >= 0 && c < N) {
+            count += board[r][c];
+        }
+    }
+    return count;
+}
+
+// Function to apply Game of Life rules
+void gameOfLife(int board[M][N]) {
+    int next[M][N];
+
+    for (int i = 0; i < M; i++) {
+        for (int j = 0; j < N; j++) {
+            int liveNeighbors = countLiveNeighbors(board, i, j);
+
+            // Rule 1: Underpopulation
+            // Rule 2: Survival
+            // Rule 3: Overpopulation
+            // Rule 4: Reproduction
+            if (board[i][j] == 1 && (liveNeighbors < 2 || liveNeighbors > 3))
+                next[i][j] = 0; // dies
+            else if (board[i][j] == 0 && liveNeighbors == 3)
+                next[i][j] = 1; // becomes alive
+            else
+                next[i][j] = board[i][j]; // remains same
+        }
+    }
+
+    // Copy next state back to board
+    for (int i = 0; i < M; i++) {
+        for (int j = 0; j < N; j++) {
+            board[i][j] = next[i][j];
+        }
+    }
+}
+
+int main() {
+    int board[M][N] = {
+        {0, 1, 0},
+        {0, 0, 1},
+        {1, 1, 1},
+        {0, 0, 0}
+    };
+
+    printf("Initial Board:\n");
+    printBoard(board);
+
+    gameOfLife(board);
+
+    printf("\nNext Generation:\n");
+    printBoard(board);
+
+    return 0;
+}
