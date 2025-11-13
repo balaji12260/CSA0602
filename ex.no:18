@@ -1,0 +1,36 @@
+#include <stdio.h>
+
+int main() {
+    // 1. Empty list
+    int emptyList[0]; // Empty array
+    int size1 = 0;
+    printf("1. Empty List:\n");
+    if (size1 == 0)
+        printf("List is empty.\n\n");
+
+    // 2. List with one element
+    int oneElementList[1] = {10};
+    int size2 = 1;
+    printf("2. List with One Element:\n");
+    for (int i = 0; i < size2; i++)
+        printf("%d ", oneElementList[i]);
+    printf("\n\n");
+
+    // 3. List with all identical elements
+    int identicalList[5] = {7, 7, 7, 7, 7};
+    int size3 = 5;
+    printf("3. List with All Identical Elements:\n");
+    for (int i = 0; i < size3; i++)
+        printf("%d ", identicalList[i]);
+    printf("\n\n");
+
+    // 4. List with negative numbers
+    int negativeList[5] = {-1, -5, -10, -15, -20};
+    int size4 = 5;
+    printf("4. List with Negative Numbers:\n");
+    for (int i = 0; i < size4; i++)
+        printf("%d ", negativeList[i]);
+    printf("\n");
+
+    return 0;
+}
