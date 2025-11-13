@@ -1,0 +1,40 @@
+#include <stdio.h>
+
+#define MAX_ROWS 100
+
+// Function to calculate the fullness of the j-th glass in the i-th row
+double champagneTower(int poured, int query_row, int query_glass) {
+    double tower[MAX_ROWS + 1][MAX_ROWS + 1] = {0.0};
+
+    tower[0][0] = poured;  // pour into top glass
+
+    for (int i = 0; i <= query_row; i++) {
+        for (int j = 0; j <= i; j++) {
+            if (tower[i][j] > 1.0) {
+                double overflow = (tower[i][j] - 1.0) / 2.0;
+                tower[i + 1][j] += overflow;
+                tower[i + 1][j + 1] += overflow;
+                tower[i][j] = 1.0; // glass becomes full
+            }
+        }
+    }
+
+    // The answer is how full the target glass is (max 1)
+    return (tower[query_row][query_glass] > 1.0) ? 1.0 : tower[query_row][query_glass];
+}
+
+int main() {
+    int poured, row, glass;
+
+    // Example 1
+    poured = 4;
+    row = 2;
+    glass = 1;
+
+    double result = champagneTower(poured, row, glass);
+
+    printf("Input: poured=%d, query_row=%d, query_glass=%d\n", poured, row, glass);
+    printf("Output: %.6f\n", result);
+
+    return 0;
+}
