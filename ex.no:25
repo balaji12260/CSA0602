@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 100
+
+// Function to check if str2 is a substring of str1
+int isSubstring(char str1[], char str2[]) {
+    int len1 = strlen(str1);
+    int len2 = strlen(str2);
+
+    // Only possible if str2 is smaller than or equal to str1
+    if (len2 > len1)
+        return 0;
+
+    for (int i = 0; i <= len1 - len2; i++) {
+        int j;
+        for (j = 0; j < len2; j++) {
+            if (str1[i + j] != str2[j])
+                break;
+        }
+        if (j == len2)
+            return 1; // Found substring
+    }
+    return 0;
+}
+
+int main() {
+    char words[4][MAX] = {"mass", "as", "hero", "superhero"};
+    int n = 4;
+
+    printf("Output: [");
+
+    int firstPrinted = 0;
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (i != j && isSubstring(words[j], words[i])) {
+                if (firstPrinted)
+                    printf(", ");
+                printf("\"%s\"", words[i]);
+                firstPrinted = 1;
+                break;
+            }
+        }
+    }
+
+    printf("]\n");
+    return 0;
+}
