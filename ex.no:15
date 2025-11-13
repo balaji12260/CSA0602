@@ -1,0 +1,29 @@
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char s[] = "abbxxxxzzy";  // Example input
+    int n = strlen(s);
+
+    int start = 0;  // start index of a group
+    printf("Input: s = \"%s\"\n", s);
+    printf("Output: [");
+
+    int found = 0; // to track if any group found
+
+    for (int i = 1; i <= n; i++) {
+        // When the character changes or we reach end of string
+        if (i == n || s[i] != s[start]) {
+            if (i - start >= 3) {  // large group (3 or more)
+                if (found)
+                    printf(", ");  // for formatting output
+                printf("[%d,%d]", start, i - 1);
+                found = 1;
+            }
+            start = i;  // move start to new group
+        }
+    }
+
+    printf("]\n");
+    return 0;
+}
