@@ -1,0 +1,44 @@
+#include <stdio.h>
+
+long long robLinear(int nums[], int left, int right) {
+    // Rob houses from index left to right inclusive (linear)
+    long long prev2 = 0; // dp[i-2]
+    long long prev1 = 0; // dp[i-1]
+    for (int i = left; i <= right; i++) {
+        long long take = nums[i] + prev2;
+        long long notake = prev1;
+        long long cur = (take > notake) ? take : notake;
+        prev2 = prev1;
+        prev1 = cur;
+    }
+    return prev1;
+}
+
+long long rob(int nums[], int n) {
+    if (n == 0) return 0;
+    if (n == 1) return nums[0];
+    // Case 1: exclude last house
+    long long case1 = robLinear(nums, 0, n - 2);
+    // Case 2: exclude first house
+    long long case2 = robLinear(nums, 1, n - 1);
+    return (case1 > case2) ? case1 : case2;
+}
+
+int main() {
+    // Example 1
+    int houses1[] = {2, 3, 2};
+    int n1 = sizeof(houses1) / sizeof(houses1[0]);
+    printf("Example 1: max loot = %lld\n", rob(houses1, n1)); // Expected 3
+
+    // Example 2
+    int houses2[] = {1, 2, 3, 1};
+    int n2 = sizeof(houses2) / sizeof(houses2[0]);
+    printf("Example 2: max loot = %lld\n", rob(houses2, n2)); // Expected 4
+
+    // Example 3 (single house)
+    int houses3[] = {5};
+    int n3 = sizeof(houses3) / sizeof(houses3[0]);
+    printf("Example 3: max loot = %lld\n", rob(houses3, n3)); // Expected 5
+
+    return 0;
+}
