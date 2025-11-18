@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node {
+    int key;
+    int value;
+    struct Node* next;
+} Node;
+
+#define TABLE_SIZE 1009   // Prime number for hash table
+
+// Hash function
+int hash(int key) {
+    return (key % TABLE_SIZE + TABLE_SIZE) % TABLE_SIZE;
+}
+
+// Insert key into hash table
+void insert(Node* table[], int key) {
+    int index = hash(key);
+    Node* current = table[index];
+
+    while (current != NULL) {
+        if (current->key == key) {
+            current->value++;
+            return;
+        }
+        current = current->next;
+    }
+
+    Node* newNode = (Node*) malloc(sizeof(Node));
+    newNode->key = key;
+    newNode->value = 1;
+    newNode->next = table[index];
+    table[index] = newNode;
+}
+
+// Search key in hash table
+int search(Node* table[], int key) {
+    int index = hash(key);
+    Node* current = table[index];
+
+    while (current != NULL) {
+        if (current->key == key)
+            return current->value;
+        current = current->next;
+    }
+    return 0;
+}
+
+int main() {
+    int A[] = {1, 2};
+    int B[] = {-2, -1};
+    int C[] = {-1, 2};
+    int D[] = {0, 2};
+    int n = 2;
+
+    Node* hashTable[TABLE_SIZE] = {NULL};
+
+    // Store all sums of A[i] + B[j]
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            insert(hashTable, A[i] + B[j]);
+
+    int count = 0;
+
+    // Check sums of C[k] + D[l]
+    for (int k = 0; k < n; k++)
+        for (int l = 0; l < n; l++)
+            count += search(hashTable, -(C[k] + D[l]));
+
+    printf("Number of tuples = %d\n", count);
+    return 0;
+}
