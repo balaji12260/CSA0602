@@ -1,0 +1,86 @@
+#include <stdio.h>
+
+void printArray(int arr[], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("%d", arr[i]);
+        if (i < n - 1) printf(",");
+    }
+    printf("\n");
+}
+
+// Partition using the first element as pivot
+int partition(int arr[], int low, int high, int n) {
+    int pivot = arr[low];
+    int i = low + 1, j = high;
+
+    while (1) {
+        while (i <= high && arr[i] <= pivot) i++;
+        while (j >= low && arr[j] > pivot) j--;
+
+        if (i < j) {
+            int temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        } else {
+            break;
+        }
+    }
+
+    // Place pivot in the correct position
+    arr[low] = arr[j];
+    arr[j] = pivot;
+
+    printf("Array after partition with pivot %d: ", pivot);
+    printArray(arr, n);
+
+    return j;  // return pivot index
+}
+
+// Quick Sort
+void quickSort(int arr[], int low, int high, int n) {
+    if (low < high) {
+        int p = partition(arr, low, high, n);
+
+        quickSort(arr, low, p - 1, n);
+        quickSort(arr, p + 1, high, n);
+    }
+}
+
+int main() {
+
+    // ------------ TEST CASE 1 -------------
+    printf("Test Case 1:\n");
+    int a1[] = {10,16,8,12,15,6,3,9,5};
+    int n1 = 9;
+
+    quickSort(a1, 0, n1 - 1, n1);
+
+    printf("Final Sorted Output:\n");
+    printArray(a1, n1);
+
+    printf("\n");
+
+    // ------------ TEST CASE 2 -------------
+    printf("Test Case 2:\n");
+    int a2[] = {12,4,78,23,45,67,89,1};
+    int n2 = 8;
+
+    quickSort(a2, 0, n2 - 1, n2);
+
+    printf("Final Sorted Output:\n");
+    printArray(a2, n2);
+
+    printf("\n");
+
+    // ------------ TEST CASE 3 -------------
+    printf("Test Case 3:\n");
+    int a3[] = {38,27,43,3,9,82,10};
+    int n3 = 7;
+
+    quickSort(a3, 0, n3 - 1, n3);
+
+    printf("Final Sorted Output:\n");
+    printArray(a3, n3);
+
+    return 0;
+}
