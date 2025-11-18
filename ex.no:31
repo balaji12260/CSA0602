@@ -1,0 +1,87 @@
+#include <stdio.h>
+#include <math.h>
+
+// Function to calculate total value of selected items
+int total_value(int items[], int item_count, int values[]) {
+    int sum = 0;
+    for (int i = 0; i < item_count; i++) {
+        sum += values[items[i]];
+    }
+    return sum;
+}
+
+// Function to check if selected items are feasible
+int is_feasible(int items[], int item_count, int weights[], int capacity) {
+    int total_weight = 0;
+    for (int i = 0; i < item_count; i++) {
+        total_weight += weights[items[i]];
+    }
+    return (total_weight <= capacity);
+}
+
+// Knapsack solver using brute force
+void knapsack(int n, int weights[], int values[], int capacity) {
+    int max_value = 0;
+    int best_set[20];
+    int best_count = 0;
+
+    int total_subsets = 1 << n; // 2^n subsets
+
+    for (int mask = 0; mask < total_subsets; mask++) {
+        int selected[20], count = 0;
+
+        // Build subset from bitmask
+        for (int i = 0; i < n; i++) {
+            if (mask & (1 << i)) {
+                selected[count++] = i;
+            }
+        }
+
+        // Check feasibility
+        if (is_feasible(selected, count, weights, capacity)) {
+            int val = total_value(selected, count, values);
+
+            if (val > max_value) {
+                max_value = val;
+                best_count = count;
+                for (int k = 0; k < count; k++)
+                    best_set[k] = selected[k];
+            }
+        }
+    }
+
+    // Print result
+    printf("Optimal Selection: [");
+    for (int i = 0; i < best_count; i++) {
+        printf("%d", best_set[i]);
+        if (i < best_count - 1) printf(", ");
+    }
+    printf("]\n");
+    printf("Total Value: %d\n", max_value);
+}
+
+// ---------------- MAIN ----------------
+int main() {
+
+    // ----------- TEST CASE 1 -----------
+    printf("Test Case 1:\n");
+    int weights1[] = {2, 3, 1};
+    int values1[] = {4, 5, 3};
+    int capacity1 = 4;
+    int n1 = 3;
+
+    knapsack(n1, weights1, values1, capacity1);
+
+    printf("\n");
+
+    // ----------- TEST CASE 2 -----------
+    printf("Test Case 2:\n");
+    int weights2[] = {1, 2, 3, 4};
+    int values2[] = {2, 4, 6, 3};
+    int capacity2 = 6;
+    int n2 = 4;
+
+    knapsack(n2, weights2, values2, capacity2);
+
+    return 0;
+}
